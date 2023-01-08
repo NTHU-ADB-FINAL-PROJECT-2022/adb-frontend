@@ -1,0 +1,76 @@
+.mat-card-header-text {
+  margin-left: 0;
+}
+
+.full-height {
+  height: calc(100vh - 64px);
+
+  mat-card {
+    height: 100%;
+  }
+}
+
+.viewAsOption {
+  padding: 5px;
+  text-decoration: none;
+  cursor: pointer;
+
+  &.selected {
+    font-weight: bold;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+}
+
+// ---------For the slider ------------------:
+::ng-deep {
+  .custom-slider .ngx-slider .ngx-slider-bar {
+    background: #c1a9a9;
+    height: 2px;
+  }
+  .custom-slider .ngx-slider .ngx-slider-selection {
+    background: #706485;
+  }
+
+  .custom-slider .ngx-slider .ngx-slider-pointer {
+    width: 8px;
+    height: 16px;
+    top: auto; /* to remove the default positioning */
+    bottom: 0;
+    background-color: #333;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+  }
+
+  .custom-slider .ngx-slider .ngx-slider-pointer:after {
+    display: none;
+  }
+
+  .custom-slider .ngx-slider .ngx-slider-bubble {
+    bottom: 14px;
+  }
+
+  .custom-slider .ngx-slider .ngx-slider-limit {
+    font-weight: bold;
+    color: #673ab7;
+  }
+
+  .custom-slider .ngx-slider .ngx-slider-tick {
+    width: 1px;
+    height: 10px;
+    margin-left: 4px;
+    border-radius: 0;
+    background: #eee7e2;
+    top: -1px;
+  }
+
+  .custom-slider .ngx-slider .ngx-slider-tick.ngx-slider-selected {
+    // background: #ffffff;
+  }
+}
+
+.filters {
+  max-width: 450px;
+}

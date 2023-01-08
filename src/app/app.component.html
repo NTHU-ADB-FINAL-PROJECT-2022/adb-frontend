@@ -1,0 +1,32 @@
+<!-- Toolbar -->
+<mat-toolbar class="toolbar" role="banner">
+  <div class="row align-items-end full-width" >
+
+    <div class="col-12 align-bottom" style="margin: 10px;">
+      <ul ngbNav #nav="ngbNav" class="nav-pills" style="place-content: center;">
+        <li ngbNavItem>
+          <a ngbNavLink><mat-icon>travel_explore</mat-icon> </a>
+          <ng-template ngbNavContent>
+            <app-home></app-home>
+          </ng-template>
+        </li>
+        <li ngbNavItem>
+          <a ngbNavLink><mat-icon>schema</mat-icon> </a>
+          <ng-template ngbNavContent>
+            <app-graph></app-graph>
+          </ng-template>
+        </li>
+        <li ngbNavItem>
+          <a ngbNavLink><mat-icon>diversity_3</mat-icon> </a>
+          <ng-template ngbNavContent>
+            <app-team-member></app-team-member>
+          </ng-template>
+        </li>
+      </ul>
+    </div>
+  </div>
+</mat-toolbar>
+
+<div class="content" role="main">
+  <div [ngbNavOutlet]="nav"></div>
+</div>

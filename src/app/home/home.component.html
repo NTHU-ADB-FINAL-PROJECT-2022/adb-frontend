@@ -1,0 +1,255 @@
+<div class="row">
+  <mat-drawer-container class="col-12" autosize>
+    <mat-drawer #drawer mode="side">
+      <mat-card class="filters" style="margin: 10px">
+        <mat-card-header style="justify-content: center">
+          <mat-card-title>Setting Filter</mat-card-title>
+        </mat-card-header>
+        <mat-divider></mat-divider>
+
+        <mat-card-content style="margin-top: 20px">
+          <mat-form-field class="full-width">
+            <mat-label>Transactions type</mat-label>
+            <mat-select [(ngModel)]="filters.typeSelected">
+              <mat-option [value]="'all'">All</mat-option>
+              <mat-option [value]="'cancel'">Cancel</mat-option>
+              <mat-option [value]="'return'">Return</mat-option>
+            </mat-select>
+          </mat-form-field>
+          <mat-form-field class="full-width">
+            <mat-label>City</mat-label>
+            <mat-select
+              [(ngModel)]="filters.countySelected"
+              (ngModelChange)="changedCounty($event)"
+            >
+              <mat-option [value]="undefined">None</mat-option>
+              <mat-option
+                *ngFor="let county of listOfCounties"
+                [value]="county"
+              >
+                {{ county.city + " (" + county.city_eng + ")" }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <mat-form-field class="full-width">
+            <mat-label>Town</mat-label>
+            <mat-select
+              [(ngModel)]="filters.townSelected"
+              (ngModelChange)="changedTown($event)"
+            >
+              <mat-option [value]="undefined">None</mat-option>
+              <mat-option *ngFor="let town of listOfTowns" [value]="town">
+                {{ town.district + " (" + town.district_eng + ")" }}
+              </mat-option>
+            </mat-select>
+          </mat-form-field>
+
+          <!-- Season  -->
+          <div *ngIf="viewAs == 'table'">
+            <mat-label>Season</mat-label><br />
+            <mat-button-toggle-group
+              style="margin-top: 10px"
+              name="fontStyle"
+              appearance="legacy"
+              aria-label="Font Style"
+            >
+              <mat-button-toggle
+                value="bold"
+                style="color: rgb(0, 255, 251)"
+                (click)="selectSeason('winter')"
+              >
+                <mat-icon>ac_unit</mat-icon><br />
+                Winter</mat-button-toggle
+              >
+              <mat-button-toggle
+                value="italic"
+                style="color: rgb(0, 214, 0)"
+                (click)="selectSeason('spring')"
+              >
+                <mat-icon> local_florist</mat-icon><br />
+                Spring</mat-button-toggle
+              >
+              <mat-button-toggle
+                value="underline"
+                style="color: rgb(255, 170, 0)"
+                (click)="selectSeason('summer')"
+              >
+                <mat-icon>wb_sunny</mat-icon><br />
+                Summer
+              </mat-button-toggle>
+              <mat-button-toggle
+                value="underline"
+                style="color: rgb(255, 68, 51)"
+                (click)="selectSeason('autumn')"
+              >
+                <mat-icon>park</mat-icon><br />
+                Autumn</mat-button-toggle
+              >
+              <mat-button-toggle
+                value="underline"
+                style="color: rgb(0, 213, 241)"
+                (click)="selectSeason('')"
+              >
+                <mat-icon>all_inclusive</mat-icon><br />
+                All</mat-button-toggle
+              >
+            </mat-button-toggle-group>
+          </div>
+
+        </mat-card-content>
+        <mat-divider></mat-divider>
+        <mat-card-content
+          align="end"
+          style="text-align: center; margin-top: 30px"
+        >
+          <button
+            mat-raised-button
+            color="secondary"
+            class="mr-2"
+            (click)="clearFilters()"
+          >
+            Reset
+          </button>
+          <button mat-raised-button color="accent" (click)="getData()">
+            Apply
+          </button>
+        </mat-card-content>
+      </mat-card>
+    </mat-drawer>
+    <div></div>
+
+    <div class="full-height">
+      <mat-card>
+        <mat-card-content>
+          <div class="row full-width m-0">
+            <div class="text-left col-3">
+              <button mat-mini-fab color="warn" (click)="drawer.toggle()">
+                <mat-icon>filter_list</mat-icon>
+              </button>
+            </div>
+
+            <div class="text-center col-3">
+              <!-- Radius -->
+              <div
+                class="custom-slider"
+                style="margin-top: 10px"
+                *ngIf="viewAs === 'map' && this.filters.supplierSelected"
+              >
+                <mat-label>Radius (meters)</mat-label>
+                <ngx-slider
+                  [(value)]="filters.radius"
+                  [options]="distanceSliderOptions"
+                ></ngx-slider>
+              </div>
+            </div>
+            <div class="text-center col-3">
+              <div *ngIf="viewAs == 'map' && this.filters.supplierSelected">
+                <mat-button-toggle-group
+                  name="fontStyle"
+                  appearance="legacy"
+                  aria-label="Font Style"
+                >
+                  <mat-button-toggle
+                    value="bold"
+                    style="color: rgb(0, 255, 251)"
+                    (click)="selectSeason('winter')"
+                  >
+                    <mat-icon>ac_unit</mat-icon><br />
+                    Winter</mat-button-toggle
+                  >
+                  <mat-button-toggle
+                    value="italic"
+                    style="color: rgb(0, 214, 0)"
+                    (click)="selectSeason('spring')"
+                  >
+                    <mat-icon> local_florist</mat-icon><br />
+                    Spring</mat-button-toggle
+                  >
+                  <mat-button-toggle
+                    value="underline"
+                    style="color: rgb(255, 170, 0)"
+                    (click)="selectSeason('summer')"
+                  >
+                    <mat-icon>wb_sunny</mat-icon><br />
+                    Summer
+                  </mat-button-toggle>
+                  <mat-button-toggle
+                    value="underline"
+                    style="color: rgb(255, 68, 51)"
+                    (click)="selectSeason('autumn')"
+                  >
+                    <mat-icon>park</mat-icon><br />
+                    Autumn</mat-button-toggle
+                  >
+                  <mat-button-toggle
+                    value="underline"
+                    style="color: rgb(0, 213, 241)"
+                    (click)="selectSeason('')"
+                  >
+                    <mat-icon>all_inclusive</mat-icon><br />
+                    All</mat-button-toggle
+                  >
+                </mat-button-toggle-group>
+              </div>
+            </div>
+            <div class="text-right col-3" style="margin-bottom: 10px">
+              <mat-button-toggle-group
+                appearance="legacy"
+                name="fontStyle"
+                aria-label="Font Style"
+              >
+                <mat-button-toggle value="table" (click)="selectView('table')"
+                  ><mat-icon>analytics</mat-icon> Product
+                  Analytic</mat-button-toggle
+                >
+                <mat-button-toggle value="map" (click)="selectView('map')"
+                  ><mat-icon>maps_home_work</mat-icon> Map</mat-button-toggle
+                >
+                <!-- <mat-button-toggle value="underline">Underline</mat-button-toggle> -->
+              </mat-button-toggle-group>
+            </div>
+          </div>
+          <!-- <div class="row full-width m-0"> -->
+          <div *ngIf="viewAs === 'table'" class="col-12">
+            <app-supplier-table
+              *ngIf="filters.typeSelected === 'all'"
+            ></app-supplier-table>
+            <app-cancel-table
+              *ngIf="filters.typeSelected === 'cancel'"
+            ></app-cancel-table>
+            <app-return-table
+              *ngIf="filters.typeSelected === 'return'"
+            ></app-return-table>
+          </div>
+          <!-- </div> -->
+          <div *ngIf="viewAs === 'map'">
+            <div class="my-google-map">
+              <app-supplier-map
+                *ngIf="filters.typeSelected === 'all'"
+              ></app-supplier-map>
+              <app-cancel-map
+                *ngIf="filters.typeSelected === 'cancel'"
+              ></app-cancel-map>
+              <app-return-map
+                *ngIf="filters.typeSelected === 'return'"
+              ></app-return-map>
+            </div>
+            <div
+              appearance="standard"
+              class="full-width"
+              style="color: white; text-align: center"
+              *ngIf="viewAs === 'map'"
+            >
+              <b><img src="../../assets/latitude.png" /> : </b
+              >{{ filters.latitudSelected }} {{ "  " }}
+
+              <b><img src="../../assets/longitude.png" /> : </b
+              >{{ filters.longitudSelected }}
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+  </mat-drawer-container>
+</div>

@@ -1,0 +1,10 @@
+.main-container {
+  position: relative;
+}
+
+.table-container {
+  position: relative;
+  min-height: 200px;
+  height: calc(100vh - 325px);
+  overflow: auto;
+}

@@ -1,0 +1,147 @@
+<div class="loading-shade" *ngIf="frontEndService.isLoadingResults">
+  <mat-spinner></mat-spinner>
+</div>
+
+<google-map
+  width="100%"
+  radius="100"
+  style="height: calc(100vh - 165px)"
+  [options]="options"
+>
+  <!-- Centroid -->
+  <map-circle
+    [center]="circleCenter"
+    [radius]="filters.radius"
+    *ngIf="this.filters.supplierSelected"
+  ></map-circle>
+
+  <!-- Marker -->
+  <map-marker [position]="filters.positionSelected"> </map-marker>
+
+  <!-- Supplier -->
+  <map-marker
+    #somemarker="mapMarker"
+    [icon]="
+      marker.id === filters.supplierSelected
+        ? '../assets/selected_supplier.png'
+        : '../assets/supplier.png'
+    "
+    *ngFor="let marker of markers"
+    [position]="marker"
+    (mapClick)="openInfoWindow(somemarker, marker)"
+  >
+  </map-marker>
+
+  <!-- Cart detail box -->
+  <map-info-window *ngIf="is_supplier">
+    <div style="color: black; text-align: center">
+      <label style="font-weight: bold"
+        >{{ currentMarker?.supplier_id }}:
+      </label>
+      {{ currentMarker?.supplier_name }}
+      <table class="table table-striped">
+        <tr>
+          <th>Address</th>
+          <td>{{ currentMarker?.address }}</td>
+        </tr>
+      </table>
+      <label style="font-weight: bold">Top three returned product</label>
+      <table class="table table-striped">
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+          <th>Return reason</th>
+          <th>Returned times</th>
+        </tr>
+        <tr
+          *ngFor="
+            let p of currentMarker?.top_product;
+            index as i;
+            first as isFirst
+          "
+        >
+          <td>{{ p.product_id }}</td>
+          <td>{{ p.product_name }}</td>
+          <td>{{ p.return_reason }}</td>
+          <td>{{ p.frequency }}</td>
+        </tr>
+      </table>
+
+      <label style="font-weight: bold">Top three return reason</label>
+      <table class="table table-striped">
+        <tr>
+          <th>Return reason</th>
+          <th>Returned times</th>
+        </tr>
+        <tr
+          *ngFor="
+            let p of currentMarker?.top_reason;
+            index as i;
+            first as isFirst
+          "
+        >
+          <td>{{ p.return_reason }}</td>
+          <td>{{ p.frequency }}</td>
+        </tr>
+      </table>
+      <button
+        mat-raised-button
+        color="primary"
+        *ngIf="currentMarker"
+        (click)="viewReturnOrders(currentMarker.supplier_id)"
+      >
+        Show orders
+      </button>
+    </div>
+  </map-info-window>
+
+  <!-- Cart detail box -->
+  <map-marker
+    #orderMarker="mapMarker"
+    [icon]="order.selected ? '../assets/cart_3.png' : '../assets/cart_0.png'"
+    *ngFor="let order of orders"
+    [position]="order"
+    (mapClick)="openOrderInfoWindow(orderMarker, order)"
+  >
+  </map-marker>
+
+  <!-- Cart detail box -->
+  <map-info-window *ngIf="!is_supplier">
+    <div style="color: black; text-align: center">
+      <label style="font-weight: bold">RS Number: </label>
+      {{ currentMarkerOrder.rs_number }}
+
+      <table class="table table-striped">
+        <tr>
+          <th>Address</th>
+          <td>{{ currentMarkerOrder.address }}</td>
+        </tr>
+        <tr>
+          <th>RS Number</th>
+          <td>{{ currentMarkerOrder.rs_number }}</td>
+        </tr>
+        <tr>
+          <th>Product</th>
+          <td>
+            {{ currentMarkerOrder.product_id }}:
+            {{ currentMarkerOrder.product_name }}
+          </td>
+        </tr>
+        <tr>
+          <th>Shipment status</th>
+          <td>
+            <span>
+              {{ currentMarkerOrder.return_reason }}
+            </span>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </map-info-window>
+</google-map>
+<table style="margin: 10px; color: white" class="table">
+  <tr>
+    <td>Suppliers Found: {{ markers.length }}</td>
+    <td>Transaction Found: {{ orders.length }}</td>
+  </tr>
+</table>
